@@ -6,22 +6,27 @@ using System.ComponentModel.Composition;
 using Windows.System;
 
 using WindowSill.API;
+using WindowSill.PerfCounter.UI;
 
 namespace WindowSill.PomodoroTimer;
 
 [Export(typeof(ISill))]
 [Name("WindowSill.PomodoroTimer")]
 [Priority(Priority.Lowest)]
-public sealed class MySill : ISillActivatedByDefault, ISillListView
+public sealed class PomodoroTimerSill : ISill, ISillSingleView
 {
-    private WindowInfo? _activeProcessWindow;
+    private PomodoroTimerVm? pomodoroTimerVm;
+    public SillView? View { get; private set; } = new SillView();
 
     [ImportingConstructor]
-    public MySill(IProcessInteractionService processInteractionService)
+    public PomodoroTimerSill(IPluginInfo pluginInfo)
     {
+        pomodoroTimerVm = new PomodoroTimerVm(pluginInfo);
+        View = pomodoroTimerVm.CreateView();
     }
 
     public string DisplayName => "/WindowSill.PomodoroTimer/Misc/DisplayName".GetLocalizedString();
+
 
     public IconElement CreateIcon()
         => new FontIcon
