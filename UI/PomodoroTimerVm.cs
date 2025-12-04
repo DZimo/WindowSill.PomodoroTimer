@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using WindowSill.API;
 using WindowSill.PomodoroTimer.Models;
 using WindowSill.PomodoroTimer.Services;
@@ -38,15 +39,31 @@ public partial class PomodoroTimerVm : ObservableObject
 
         _pluginInfo = pluginInfo;
         _timeHandlerService = timeHandlerService;
+    }
 
+    public SillView CreateView()
+    {
+        return new SillView { Content = new PomodoroTimerView(_pluginInfo, this) };
+    }
+
+    [RelayCommand]
+    private void StartPomodoro()
+    {
         _timeHandlerService.StartTimer(TimeManager, PomodoroType);
         _timeHandlerService.TimerReduced += OnTimerReduced;
+    }
+
+    [RelayCommand]
+    private void StopPomodoro()
+    {
+        _timeHandlerService.ResetTimer(TimeManager, PomodoroType);
+        _timeHandlerService.TimerReduced -= OnTimerReduced;
     }
 
     private void OnTimerReduced(object? sender, TimeManager? e)
     {
         TimeManager.Seconds++;
-        TimeManager.Minutes ++;
+        TimeManager.Minutes++;
 
         ThreadHelper.RunOnUIThreadAsync(() =>
         {
@@ -56,8 +73,4 @@ public partial class PomodoroTimerVm : ObservableObject
         });
     }
 
-    public SillView CreateView()
-    {
-        return new SillView { Content = new PomodoroTimerView(_pluginInfo, this) };
-    }
 }

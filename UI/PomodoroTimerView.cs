@@ -45,7 +45,7 @@ public sealed class PomodoroTimerView : Button
                                               .Children(
                                                   new StackPanel()
                                                      .Height(5)
-                                                     .Background(new SolidColorBrush(Colors.Aqua)),
+                                                     .Background(new SolidColorBrush(Colors.IndianRed)),
                                                   new TextBlock()
                                                      .FontSize(x => x.ThemeResource("SillFontSize"))
                                                      .Text(_pomodoroType.ToString())
@@ -58,9 +58,11 @@ public sealed class PomodoroTimerView : Button
                                   .Children(
                                       new Button()
                                           .Style(x => x.StaticResource("IconButton"))
+                                          .Command(x => x.Binding(() => vm.StartPomodoroCommand))
                                           .Content("\xE768"),
                                       new Button()
                                           .Style(x => x.StaticResource("IconButton"))
+                                          .Command(x => x.Binding(() => vm.StopPomodoroCommand))
                                           .Content("\xE71a")
                                   ),
                                new StackPanel()
