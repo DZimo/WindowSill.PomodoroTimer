@@ -52,23 +52,22 @@ namespace WindowSill.PomodoroTimer.Services
 
             timeManager.MainTimer.Stop();
             _timerReducer.Stop();
-            timeManager.MainTimer.Interval = TimeSpan.FromMinutes(GetTimeFromType(type)).TotalMilliseconds;
+            timeManager.MainTimer.Interval = TimeSpan.FromMinutes(GetTimeFromBreak(_isBreakTime, type)).TotalMilliseconds;
 
             StartTimer(timeManager, type);
-        }
-        private void OnTimerReduced(object? sender, ElapsedEventArgs e)
-        {
-            TimerReduced?.Invoke(this, null);
-        }
-
-        private void OnTimerFinished(object? sender, ElapsedEventArgs e)
-        {
-            TimerFinished?.Invoke(this, null);
         }
 
         public void ResetTimer(TimeManager timeManager, PomodoroType type)
         {
             timeManager.MainTimer?.Stop();
+            _timerReducer.Stop();
+
+            if (timeManager.MainTimer is not null)
+                timeManager.MainTimer.Elapsed -= OnTimerFinished;
+            _timerReducer.Elapsed -= OnTimerReduced;
+
+            timeManager.MainTimer = null;
+
         }
 
         public int GetMinutes(TimeManager? timeManager)
@@ -92,7 +91,7 @@ namespace WindowSill.PomodoroTimer.Services
             switch (type) 
             {
                 case PomodoroType.Short:
-                    return 1;
+                    return 25;
                 case PomodoroType.Long:
                     return 50;
                 default:
@@ -102,7 +101,7 @@ namespace WindowSill.PomodoroTimer.Services
 
         public int GetTimeFromBreak(bool isBreak, PomodoroType type)
         {
-            return isBreak ? 2 : GetTimeFromType(type);
+            return isBreak ? 5 : GetTimeFromType(type);
         }
 
         public Color GetColorFrombreak(bool isBreak)
@@ -119,8 +118,19 @@ namespace WindowSill.PomodoroTimer.Services
             _timerReducer.Start();
         }
 
+        private void OnTimerReduced(object? sender, ElapsedEventArgs e)
+        {
+            TimerReduced?.Invoke(this, null);
+        }
+
+        private void OnTimerFinished(object? sender, ElapsedEventArgs e)
+        {
+            TimerFinished?.Invoke(this, null);
+        }
+
         public void Dispose()
         {
+            _timerReducer.Dispose();
             TimerFinished -= null;
         }
     }

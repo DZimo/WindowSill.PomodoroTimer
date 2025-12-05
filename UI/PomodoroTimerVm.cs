@@ -20,12 +20,17 @@ public partial class PomodoroTimerVm : ObservableObject
     private PomodoroType pomodoroType = PomodoroType.Short;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(PomodoroStopped))]
+    [NotifyCanExecuteChangedFor(nameof(StartPomodoroCommand))]
+    [NotifyCanExecuteChangedFor(nameof(StopPomodoroCommand))]
     private bool pomodoroStarted;
 
     [ObservableProperty]
     private SolidColorBrush pomodoroColor = new SolidColorBrush(Colors.IndianRed);
 
     public static PomodoroTimerVm? Instance;
+
+    private bool CanExecuteStart() => PomodoroStarted;
 
     private bool PomodoroStopped
     {
@@ -73,11 +78,7 @@ public partial class PomodoroTimerVm : ObservableObject
 
     private void OnTimerFinished(object? sender, TimeManager? e)
     {
-        ThreadHelper.RunOnUIThreadAsync(() =>
-        {
-            TimeManager.Seconds = 0;
-            TimeManager.Minutes = 0;
-        });
+        ReserTimersVm();
 
         _timeHandlerService.ChangeTime(TimeManager, PomodoroType);
     }
@@ -89,6 +90,9 @@ public partial class PomodoroTimerVm : ObservableObject
 
         _timeHandlerService.ResetTimer(TimeManager, PomodoroType);
         _timeHandlerService.TimerReduced -= OnTimerReduced;
+        _timeHandlerService.TimerFinished -= OnTimerFinished;
+
+        ReserTimersVm();
     }
 
     private void OnTimerReduced(object? sender, TimeManager? e)
@@ -98,6 +102,19 @@ public partial class PomodoroTimerVm : ObservableObject
 
         ThreadHelper.RunOnUIThreadAsync(() =>
         {
+            OnPropertyChanged(nameof(MinutesLeft));
+            OnPropertyChanged(nameof(SecondsLeft));
+            OnPropertyChanged(nameof(TimeLeft));
+        });
+    }
+
+    private void ReserTimersVm()
+    {
+        ThreadHelper.RunOnUIThreadAsync(() =>
+        {
+            TimeManager.Seconds = 0;
+            TimeManager.Minutes = 0;
+
             OnPropertyChanged(nameof(MinutesLeft));
             OnPropertyChanged(nameof(SecondsLeft));
             OnPropertyChanged(nameof(TimeLeft));
