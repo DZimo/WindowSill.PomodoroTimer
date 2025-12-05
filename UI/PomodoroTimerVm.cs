@@ -18,6 +18,14 @@ public partial class PomodoroTimerVm : ObservableObject
     [ObservableProperty]
     private PomodoroType pomodoroType = PomodoroType.Short;
 
+    [ObservableProperty]
+    private bool pomodoroStarted;
+
+    private bool PomodoroStopped
+    {
+        get => !PomodoroStarted;
+    }
+
     public string MinutesLeft
     {
         get => $"{_timeHandlerService.GetMinutes(TimeManager):D2}";
@@ -46,16 +54,32 @@ public partial class PomodoroTimerVm : ObservableObject
         return new SillView { Content = new PomodoroTimerView(_pluginInfo, this) };
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(PomodoroStopped))]
     private void StartPomodoro()
     {
+        PomodoroStarted = true;
+
         _timeHandlerService.StartTimer(TimeManager, PomodoroType);
         _timeHandlerService.TimerReduced += OnTimerReduced;
+        _timeHandlerService.TimerFinished += OnTimerFinished;
     }
 
-    [RelayCommand]
+    private void OnTimerFinished(object? sender, TimeManager? e)
+    {
+        ThreadHelper.RunOnUIThreadAsync(() =>
+        {
+            TimeManager.Seconds = 0;
+            TimeManager.Minutes = 0;
+        });
+
+        _timeHandlerService.ChangeTime(TimeManager, PomodoroType);
+    }
+
+    [RelayCommand(CanExecute = nameof(PomodoroStarted))]
     private void StopPomodoro()
     {
+        PomodoroStarted = false;
+
         _timeHandlerService.ResetTimer(TimeManager, PomodoroType);
         _timeHandlerService.TimerReduced -= OnTimerReduced;
     }
@@ -63,7 +87,7 @@ public partial class PomodoroTimerVm : ObservableObject
     private void OnTimerReduced(object? sender, TimeManager? e)
     {
         TimeManager.Seconds++;
-        //TimeManager.Minutes++;
+        TimeManager.Minutes = TimeManager.Seconds / 60;
 
         ThreadHelper.RunOnUIThreadAsync(() =>
         {
@@ -72,5 +96,4 @@ public partial class PomodoroTimerVm : ObservableObject
             OnPropertyChanged(nameof(TimeLeft));
         });
     }
-
 }

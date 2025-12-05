@@ -12,6 +12,8 @@ namespace WindowSill.PomodoroTimer.Services
 
         public void ResetTimer(TimeManager timeManager, PomodoroType type);
 
+        public void ChangeTime(TimeManager timeManager, PomodoroType type);
+
         public int GetMinutes(TimeManager timeManager);
 
         public int GetSeconds(TimeManager timeManager);

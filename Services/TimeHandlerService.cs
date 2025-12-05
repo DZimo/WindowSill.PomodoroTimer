@@ -12,6 +12,7 @@ namespace WindowSill.PomodoroTimer.Services
         public event EventHandler<TimeManager?>? TimerReduced;
 
         public Timer _timerReducer = new Timer(TimeSpan.FromSeconds(1));
+        private bool _isBreakTime = false;
 
         [ImportingConstructor]
         public TimeHandlerService()
@@ -21,14 +22,31 @@ namespace WindowSill.PomodoroTimer.Services
 
         public void StartTimer(TimeManager timeManager, PomodoroType type)
         {
-            timeManager.MainTimer = new Timer(TimeSpan.FromMinutes(GetTimeFromType(type)).TotalMilliseconds);
-            timeManager.MainTimer.Start();
-            timeManager.MainTimer.Elapsed += OnTimerFinished;
+            if (timeManager.MainTimer is not null)
+            {
+                StartTimers(timeManager);
+                return;
+            }
 
-            _timerReducer.Start();
+            timeManager.MainTimer = new Timer(TimeSpan.FromMinutes(GetTimeFromBreak(_isBreakTime, type)).TotalMilliseconds);
+            StartTimers(timeManager);
+            timeManager.MainTimer.Elapsed += OnTimerFinished;
             _timerReducer.Elapsed += OnTimerReduced;
         }
 
+        public void ChangeTime(TimeManager timeManager, PomodoroType type)
+        {
+            if (timeManager.MainTimer is null)
+                return;
+
+            _isBreakTime = !_isBreakTime;
+
+            timeManager.MainTimer.Stop();
+            _timerReducer.Stop();
+            timeManager.MainTimer.Interval = TimeSpan.FromMinutes(GetTimeFromType(type)).TotalMilliseconds;
+
+            StartTimer(timeManager, type);
+        }
         private void OnTimerReduced(object? sender, ElapsedEventArgs e)
         {
             TimerReduced?.Invoke(this, null);
@@ -65,12 +83,26 @@ namespace WindowSill.PomodoroTimer.Services
             switch (type) 
             {
                 case PomodoroType.Short:
-                    return 25;
+                    return 1;
                 case PomodoroType.Long:
                     return 50;
                 default:
                     return 25;
             }
+        }
+
+        public int GetTimeFromBreak(bool isBreak, PomodoroType type)
+        {
+            return isBreak ? 2 : GetTimeFromType(type);
+        }
+
+        private void StartTimers(TimeManager timeManager)
+        {
+            if (timeManager.MainTimer is null)
+                return;
+
+            timeManager.MainTimer.Start();
+            _timerReducer.Start();
         }
 
         public void Dispose()
