@@ -1,19 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net9.0-windows10.0.22621</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Platforms>x64</Platforms>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net9.0-windows10.0.22621</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Platforms>x64</Platforms>
+		<LangVersion>preview</LangVersion>
+		<RuntimeIdentifiers>win-x64;win-x86;win-arm64</RuntimeIdentifiers>
 
-    <PackageId>WindowSill.PomodoroTimer</PackageId>
-    <Title>WindowSill.PomodoroTimer</Title>
-    <Version>0.1.0</Version>
-  </PropertyGroup>
-  <ItemGroup>
-    <None Include="LICENSE.md" Pack="true" PackagePath="\" />
-    <None Include="CHANGELOGS.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="WindowSill.API" Version="0.7.0" />
-  </ItemGroup>
+		<PackageId>WindowSill.PomodoroTimer</PackageId>
+		<Title>WindowSill.PomodoroTimer</Title>
+		<Version>0.1.0</Version>
+		<Description>The famous Pomodoro Timer with 25/5 min mode that can boost your productivity and keeps you always in time and efficient</Description>
+		<PackageProjectUrl>https://getwindowsill.app</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/DZimo/WindowSill.PomodoroTimer</RepositoryUrl>
+		<Authors>Mohamed-Nazim BELABED</Authors>
+		<PackageIcon>Assets/pomodoro_logo.png</PackageIcon>
+		<PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+	</PropertyGroup>
+	<ItemGroup>
+		<None Include="Assets/pomodoro_logo.png" Pack="true" PackagePath="\Assets\" />
+		<None Include="LICENSE.md" Pack="true" PackagePath="\" />
+		<None Include="CHANGELOGS.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="WindowSill.API" Version="0.7.0" />
+	</ItemGroup>
 </Project>
