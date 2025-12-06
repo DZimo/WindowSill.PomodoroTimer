@@ -1,3 +1,10 @@
-# Pomodoro Timer
+# WindowSill Extensions
 
-Community extension of a Pomodoro Timer for WindowsSill Windows bar.
+
+
+List of WindowSill extensions contribution:
+
+
+
+&nbsp;	\*	Pomodoro Timer
+
