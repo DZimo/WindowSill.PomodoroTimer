@@ -28,6 +28,10 @@ public partial class PomodoroTimerVm : ObservableObject
     [ObservableProperty]
     private SolidColorBrush pomodoroColor = new SolidColorBrush(Colors.IndianRed);
 
+    [ObservableProperty]
+    private double colorHeight = 5;
+
+
     public static PomodoroTimerVm? Instance;
 
     private bool CanExecuteStart() => PomodoroStarted;

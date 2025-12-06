@@ -24,6 +24,17 @@ public sealed class PomodoroTimerSill : ISill, ISillSingleView
     {
         pomodoroTimerVm = new PomodoroTimerVm(timeHandlerService, pluginInfo);
         View = pomodoroTimerVm.CreateView();
+        UpdateColorHeight();
+
+        View.IsSillOrientationOrSizeChanged += (o, p) =>
+        {
+            UpdateColorHeight();
+        };
+    }
+
+    private void UpdateColorHeight()
+    {
+        pomodoroTimerVm?.ColorHeight = View?.SillOrientationAndSize == SillOrientationAndSize.HorizontalSmall ? 2 : View?.SillOrientationAndSize == SillOrientationAndSize.HorizontalMedium ? 4 : 6;
     }
 
     public string DisplayName => "/WindowSill.PomodoroTimer/Misc/DisplayName".GetLocalizedString();

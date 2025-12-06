@@ -6,7 +6,7 @@ using WindowSill.API;
 
 namespace WindowSill.PomodoroTimer.UI;
 
-public sealed class PomodoroTimerView : Button
+public sealed class PomodoroTimerView : UserControl
 {
     private int _pomodoroType = 25;
 
@@ -18,19 +18,17 @@ public sealed class PomodoroTimerView : Button
 
     public PomodoroTimerView(IPluginInfo pluginInfo, PomodoroTimerVm pomodoroVm)
     {
-        //var sillFontSize = (Double)Application.Current.Resources["SillFontSize"];
+        var sillFontSize = (Double)Application.Current.Resources["SillFontSize"];
 
         this.DataContext(
           pomodoroVm,
           (view, vm) => view
-          .Style(x => x.StaticResource("SillButtonStyle"))
-          .Height(double.NaN)
-          .Background(new SolidColorBrush(Colors.Transparent))
           .Content(
               new Grid()
                   .Children(
                       new SillOrientedStackPanel()
                           .VerticalAlignment(VerticalAlignment.Center)
+                          .HorizontalAlignment(HorizontalAlignment.Center)
                           .Spacing(1)
                           .Children(
                               new StackPanel()
@@ -45,7 +43,7 @@ public sealed class PomodoroTimerView : Button
                                               .Orientation(Orientation.Vertical)
                                               .Children(
                                                   new StackPanel()
-                                                     .Height(5)
+                                                     .Height(x => x.Binding(() => vm.ColorHeight).OneWay())
                                                      .Background(x => x.Binding(() => vm.PomodoroColor).OneWay()),
                                                   new TextBlock()
                                                      .Text(_pomodoroType.ToString())
@@ -65,6 +63,7 @@ public sealed class PomodoroTimerView : Button
                                   ),
                                new StackPanel()
                                   .VerticalAlignment(VerticalAlignment.Center)
+                                  .HorizontalAlignment(HorizontalAlignment.Center)
                                   .Orientation(Orientation.Horizontal)
                                   .Spacing(1)
                                   .Children(
