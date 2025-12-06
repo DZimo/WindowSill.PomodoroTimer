@@ -11,7 +11,7 @@
 		<Title>Pomodoro Timer</Title>
 		<Version>0.2.0</Version>
 		<Description>The famous Pomodoro Timer with 25/5 min mode that can boost your productivity and keeps you always in time and efficient</Description>
-		<PackageProjectUrl>https://getwindowsill.app</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/DZimo/WindowSill.PomodoroTimer</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/DZimo/WindowSill.PomodoroTimer</RepositoryUrl>
 		<Authors>Mohamed-Nazim BELABED</Authors>
 		<PackageIcon>Assets/pomodoro_logo.png</PackageIcon>
