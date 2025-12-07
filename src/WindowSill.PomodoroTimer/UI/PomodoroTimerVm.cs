@@ -117,7 +117,7 @@ public partial class PomodoroTimerVm : ObservableObject
         TimeManager.Seconds++;
         TimeManager.Minutes = TimeManager.Seconds / 60;
 
-        var time = _timeHandlerService.GetTimeFromBreak(!PomodoroStarted, PomodoroType) * 60;
+        var time = _timeHandlerService.GetTimeFromBreak(TimeManager.IsBreakTime, PomodoroType) * 60;
 
         ThreadHelper.RunOnUIThreadAsync(() =>
         {

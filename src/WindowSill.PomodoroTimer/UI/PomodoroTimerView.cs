@@ -33,11 +33,14 @@ public sealed class PomodoroTimerView : UserControl
                           .Children(
                               new StackPanel()
                                   .Orientation(Orientation.Vertical)
+                                  .VerticalAlignment(VerticalAlignment.Center)
+                                  .HorizontalAlignment(HorizontalAlignment.Center)
                                   .Padding(1)
                                   .Margin(1)
                                   .Children(
                                       new Button()
                                           .Style(x => x.StaticResource("SillButtonStyle"))
+                                          .HorizontalAlignment(HorizontalAlignment.Center)
                                           .Content(
                                               new StackPanel()
                                               .Orientation(Orientation.Vertical)
@@ -45,8 +48,10 @@ public sealed class PomodoroTimerView : UserControl
                                                   new StackPanel()
                                                      .Height(x => x.Binding(() => vm.ProgressHeight).OneWay())
                                                      .Width(x => x.Binding(() => vm.ProgressWidth).OneWay())
+                                                     .HorizontalAlignment(HorizontalAlignment.Center)
                                                      .Background(x => x.Binding(() => vm.PomodoroColor).OneWay()),
                                                   new TextBlock()
+                                                     .HorizontalAlignment(HorizontalAlignment.Center)
                                                      .Text(_pomodoroType.ToString())
                                                   )
                                   )),
@@ -69,6 +74,7 @@ public sealed class PomodoroTimerView : UserControl
                                   .Spacing(1)
                                   .Children(
                                       new TextBlock()
+                                          .Style(x => x.StaticResource("SillFontSize"))
                                           .Text(x => x.Binding(() => vm.TimeLeft).OneWay())
                                           
                                   )

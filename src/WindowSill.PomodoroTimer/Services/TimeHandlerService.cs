@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.Composition;
+﻿using Microsoft.Windows.AppNotifications;
+using Microsoft.Windows.AppNotifications.Builder;
+using System.ComponentModel.Composition;
 using System.Timers;
 using Windows.UI;
 using WindowSill.API;
@@ -15,7 +17,11 @@ namespace WindowSill.PomodoroTimer.Services
         public event EventHandler<TimeManager?>? TimerReduced;
 
         public Timer _timerReducer = new Timer(TimeSpan.FromSeconds(1));
-        private bool _isBreakTime = false;
+
+        private int _shortBreakTime = 5; 
+        private int _shortPomoTime = 25;
+        private int _LongPomoTime = 50;
+
 
         [ImportingConstructor]
         public TimeHandlerService()
@@ -31,7 +37,7 @@ namespace WindowSill.PomodoroTimer.Services
                 return;
             }
 
-            timeManager.MainTimer = new Timer(TimeSpan.FromMinutes(GetTimeFromBreak(_isBreakTime, type)).TotalMilliseconds);
+            timeManager.MainTimer = new Timer(TimeSpan.FromMinutes(GetTimeFromBreak(timeManager.IsBreakTime, type)).TotalMilliseconds);
             StartTimers(timeManager);
             timeManager.MainTimer.Elapsed += OnTimerFinished;
             _timerReducer.Elapsed += OnTimerReduced;
@@ -39,20 +45,23 @@ namespace WindowSill.PomodoroTimer.Services
 
         public void ChangeTime(TimeManager timeManager, PomodoroType type)
         {
+            ShowNotification(timeManager.IsBreakTime ? "Break Over!" : "Time for a Break!", 
+                timeManager.IsBreakTime ? "Let's get back to work." : "Take a short break.");
+
             if (timeManager.MainTimer is null)
                 return;
 
-            _isBreakTime = !_isBreakTime;
+            timeManager.IsBreakTime = !timeManager.IsBreakTime;
 
             ThreadHelper.RunOnUIThreadAsync(() =>
             {
                 if (PomodoroTimerVm.Instance is not null)
-                    PomodoroTimerVm.Instance.PomodoroColor = new SolidColorBrush(GetColorFrombreak(_isBreakTime));
+                    PomodoroTimerVm.Instance.PomodoroColor = new SolidColorBrush(GetColorFrombreak(timeManager.IsBreakTime));
             });
 
             timeManager.MainTimer.Stop();
             _timerReducer.Stop();
-            timeManager.MainTimer.Interval = TimeSpan.FromMinutes(GetTimeFromBreak(_isBreakTime, type)).TotalMilliseconds;
+            timeManager.MainTimer.Interval = TimeSpan.FromMinutes(GetTimeFromBreak(timeManager.IsBreakTime, type)).TotalMilliseconds;
 
             StartTimer(timeManager, type);
         }
@@ -91,17 +100,17 @@ namespace WindowSill.PomodoroTimer.Services
             switch (type) 
             {
                 case PomodoroType.Short:
-                    return 1;
+                    return _shortPomoTime;
                 case PomodoroType.Long:
-                    return 50;
+                    return _LongPomoTime;
                 default:
-                    return 25;
+                    return _shortPomoTime;
             }
         }
 
         public int GetTimeFromBreak(bool isBreak, PomodoroType type)
         {
-            return isBreak ? 5 : GetTimeFromType(type);
+            return isBreak ? _shortBreakTime : GetTimeFromType(type);
         }
 
         public Color GetColorFrombreak(bool isBreak)
@@ -132,6 +141,15 @@ namespace WindowSill.PomodoroTimer.Services
         {
             _timerReducer.Dispose();
             TimerFinished -= null;
+        }
+
+        public void ShowNotification(string title, string message)
+        {
+            var notification = new AppNotificationBuilder()
+                .AddText(title)
+                .AddText(message);
+
+            AppNotificationManager.Default.Show(notification.BuildNotification());
         }
     }
 }

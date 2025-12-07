@@ -1,5 +1,6 @@
 # 0.3.0
-- 
+- Notify user when a pomodoro session ends.
+- Progress bar sliding depending on time.
 
 # 0.2.0
 - Removed button from Sill.

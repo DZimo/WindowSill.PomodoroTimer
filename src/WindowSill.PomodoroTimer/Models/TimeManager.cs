@@ -12,6 +12,9 @@ namespace WindowSill.PomodoroTimer.Models
 
         [ObservableProperty]
         private int seconds;
+
+        [ObservableProperty]
+        private bool isBreakTime = false;
     }
 
     public enum PomodoroType
