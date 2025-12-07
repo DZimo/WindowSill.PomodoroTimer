@@ -1,3 +1,6 @@
+# 0.3.0
+- 
+
 # 0.2.0
 - Removed button from Sill.
 - Add of dynamic height depending on bar size.

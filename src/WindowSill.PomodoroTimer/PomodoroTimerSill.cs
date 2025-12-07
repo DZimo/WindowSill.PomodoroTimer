@@ -1,13 +1,11 @@
 using CommunityToolkit.Diagnostics;
-
+using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
-
 using Windows.System;
-
 using WindowSill.API;
-using WindowSill.PomodoroTimer.UI;
 using WindowSill.PomodoroTimer.Services;
+using WindowSill.PomodoroTimer.UI;
 
 namespace WindowSill.PomodoroTimer;
 
@@ -17,12 +15,16 @@ namespace WindowSill.PomodoroTimer;
 public sealed class PomodoroTimerSill : ISill, ISillSingleView
 {
     private PomodoroTimerVm? pomodoroTimerVm;
+    private IPluginInfo pluginInfo;
+
     public SillView? View { get; private set; }
 
     [ImportingConstructor]
     public PomodoroTimerSill(ITimeHandlerService timeHandlerService, IPluginInfo pluginInfo)
     {
+        this.pluginInfo = pluginInfo;
         pomodoroTimerVm = new PomodoroTimerVm(timeHandlerService, pluginInfo);
+
         View = pomodoroTimerVm.CreateView();
         UpdateColorHeight();
 
@@ -39,29 +41,15 @@ public sealed class PomodoroTimerSill : ISill, ISillSingleView
 
     public string DisplayName => "/WindowSill.PomodoroTimer/Misc/DisplayName".GetLocalizedString();
 
-
     public IconElement CreateIcon()
-        => new FontIcon
-        {
-            Glyph = "\uED56"
-        };
-
-    public ObservableCollection<SillListViewItem> ViewList
-        => [
-           new SillListViewButtonItem(
-                '\uE710',
-                "/WindowSill.PomodoroTimer/Misc/CommandTitle".GetLocalizedString(),
-                OnCommandButtonClickAsync),
-        ];
+         => new ImageIcon
+         {
+             Source = new SvgImageSource(new Uri(System.IO.Path.Combine(pluginInfo.GetPluginContentDirectory(), "Assets", "pomodoro_logo.svg")))
+         };
 
     public SillView? PlaceholderView => null;
 
     public SillSettingsView[]? SettingsViews => null;
-
-    private async Task OnCommandButtonClickAsync()
-    {
-
-    }
 
     public ValueTask OnActivatedAsync()
     {
@@ -70,6 +58,9 @@ public sealed class PomodoroTimerSill : ISill, ISillSingleView
 
     public ValueTask OnDeactivatedAsync()
     {
+        View = null;
+        pomodoroTimerVm = null;
+
         return ValueTask.CompletedTask;
     }
 }
