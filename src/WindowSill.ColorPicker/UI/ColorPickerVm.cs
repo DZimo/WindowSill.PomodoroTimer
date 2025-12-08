@@ -19,11 +19,15 @@ public partial class ColorPickerVm : ObservableObject
         get => selectedColorHex;
         set
         {
-            selectedColorHex = value;
+            if (value.AsSpan().Length < 1)
+                return;
+
+            var res = string.Concat("#", value.AsSpan(1));
+
+            selectedColorHex = res;
             object? newColor = null;
 
-            try
-            {
+            try {
                 newColor = new ColorConverter().ConvertFromString(selectedColorHex);
             }
             catch (Exception ex) { }
