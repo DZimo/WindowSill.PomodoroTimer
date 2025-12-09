@@ -46,10 +46,12 @@ public sealed class ColorPickerView : UserControl
                                           .Children(
                                                 new Button()
                                                    .Style(x => x.StaticResource("IconButton"))
-                                                   .Content("\xEf3c"),
+                                                   .Content("\xEf3c")
+                                                   .Command(x => x.Binding(() => vm.GetColorCommand)),
                                                 new Button()
                                                    .Style(x => x.StaticResource("IconButton"))
                                                    .Content("\xE8c8")
+                                                   .Command(x => x.Binding(() => vm.CopyColorHexCommand))
                                   ))
                       )
         )));

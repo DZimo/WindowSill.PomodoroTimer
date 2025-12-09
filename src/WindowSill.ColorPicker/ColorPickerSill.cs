@@ -13,18 +13,20 @@ namespace WindowSill.ColorPicker;
 [Priority(Priority.Lowest)]
 public sealed class ColorPickerSill : ISill, ISillSingleView
 {
-    private ColorPickerVm? pomodoroTimerVm;
-    private IPluginInfo pluginInfo;
+    private ColorPickerVm _colorPickerVm;
+    private IPluginInfo _pluginInfo;
+    private IProcessInteractionService _processInteraction;
 
     public SillView? View { get; private set; }
 
     [ImportingConstructor]
-    public ColorPickerSill(IPluginInfo pluginInfo)
+    public ColorPickerSill(IPluginInfo pluginInfo, IProcessInteractionService processInteraction)
     {
-        this.pluginInfo = pluginInfo;
-        pomodoroTimerVm = new ColorPickerVm(pluginInfo);
+        _pluginInfo = pluginInfo;
+        _processInteraction = processInteraction;
+        _colorPickerVm = new ColorPickerVm(pluginInfo, processInteraction);
 
-        View = pomodoroTimerVm.CreateView();
+        View = _colorPickerVm.CreateView();
         UpdateColorHeight();
 
         View.IsSillOrientationOrSizeChanged += (o, p) =>
@@ -42,7 +44,7 @@ public sealed class ColorPickerSill : ISill, ISillSingleView
     public IconElement CreateIcon()
          => new ImageIcon
          {
-             Source = new SvgImageSource(new Uri(System.IO.Path.Combine(pluginInfo.GetPluginContentDirectory(), "Assets", "pomodoro_logo.svg")))
+             Source = new SvgImageSource(new Uri(System.IO.Path.Combine(_pluginInfo.GetPluginContentDirectory(), "Assets", "pomodoro_logo.svg")))
          };
 
     public SillView? PlaceholderView => null;
@@ -57,7 +59,7 @@ public sealed class ColorPickerSill : ISill, ISillSingleView
     public ValueTask OnDeactivatedAsync()
     {
         View = null;
-        pomodoroTimerVm = null;
+        _colorPickerVm = null;
 
         return ValueTask.CompletedTask;
     }
