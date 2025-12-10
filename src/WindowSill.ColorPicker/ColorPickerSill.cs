@@ -1,8 +1,6 @@
 using CommunityToolkit.Diagnostics;
 using Microsoft.UI.Xaml.Media.Imaging;
-using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
-using Windows.System;
 using WindowSill.API;
 using WindowSill.ColorPicker.Services;
 using WindowSill.ColorPicker.UI;
@@ -45,7 +43,7 @@ public sealed class ColorPickerSill : ISill, ISillSingleView
     public IconElement CreateIcon()
          => new ImageIcon
          {
-             Source = new SvgImageSource(new Uri(System.IO.Path.Combine(_pluginInfo.GetPluginContentDirectory(), "Assets", "pomodoro_logo.svg")))
+             Source = new SvgImageSource(new Uri(System.IO.Path.Combine(_pluginInfo.GetPluginContentDirectory(), "Assets", "colorpicker.svg")))
          };
 
     public SillView? PlaceholderView => null;
