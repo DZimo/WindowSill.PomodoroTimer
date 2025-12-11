@@ -17,6 +17,12 @@ public partial class ColorPickerVm : ObservableObject
     [ObservableProperty]
     private SolidColorBrush selectedColorBrush = new SolidColorBrush(Colors.IndianRed);
 
+    [ObservableProperty]
+    private int colorFontSize = 12;
+
+    [ObservableProperty]
+    private int colorboxHeight = 18;
+
     private string selectedColorHex = "#FFFFFF";
 
     private bool exitRequested = true;
