@@ -37,17 +37,20 @@ public sealed class SimpleCalculatorView : UserControl
                                           .Text(x => x.Binding(() => vm.SelectedNumber).TwoWay())
                                           .Padding(0),
                                       new StackPanel()
-                                          .Width(7)
-                                          .Margin(5, 0, 0, 0)
+                                          .Margin(5, 0, 5, 0)
+                                          .Padding(5, 0)
                                           .Children(
                                               new TextBlock()
-                                                  .Text(x => x.Binding(() => vm.SelectedArithmeticOP))),
+                                                  .Text(x => x.Binding(() => vm.SelectedArithmeticOP)
+                                                  .Converter(Converters.ArithmeticOpConverter))
+                                                  .VerticalAlignment(VerticalAlignment.Center)
+                                                  .HorizontalAlignment(HorizontalAlignment.Center)),
                                       new StackPanel()
                                       .Orientation(Orientation.Horizontal)
                                           .Children(
                                                 new Button()
                                                    .Style(x => x.StaticResource("IconButton"))
-                                                   .Content("\xE752")
+                                                   .Content("\xF0ad")
                                                    .Command(x => x.Binding(() => vm.ExtendCalculatorCommand))
                                   ))
                       )

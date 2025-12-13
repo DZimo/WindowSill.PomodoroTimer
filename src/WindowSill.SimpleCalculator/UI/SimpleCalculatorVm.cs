@@ -17,7 +17,7 @@ public partial class SimpleCalculatorVm : ObservableObject
     //private string selectedArithmeticOP = "";
 
     [ObservableProperty]
-    private ArithmeticOperator selectedArithmeticOP;
+    private ArithmeticOperator selectedArithmeticOP = ArithmeticOperator.None;
 
     private string selectedNumber;
     public string SelectedNumber
