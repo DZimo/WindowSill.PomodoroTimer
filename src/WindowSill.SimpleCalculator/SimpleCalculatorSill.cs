@@ -11,7 +11,7 @@ namespace WindowSill.ColorPicker;
 [Export(typeof(ISill))]
 [Name("WindowSill.ColorPicker")]
 [Priority(Priority.Lowest)]
-public sealed class ColorPickerSill : ISill, ISillListView
+public sealed class SimpleCalculatorSill : ISill, ISillListView
 {
     private ColorPickerVm _colorPickerVm;
     private IPluginInfo _pluginInfo;
@@ -20,7 +20,7 @@ public sealed class ColorPickerSill : ISill, ISillListView
     public SillView? View { get; private set; }
 
     [ImportingConstructor]
-    public ColorPickerSill(IPluginInfo pluginInfo, IProcessInteractionService processInteraction, IMouseService mouseService)
+    public SimpleCalculatorSill(IPluginInfo pluginInfo, IProcessInteractionService processInteraction, IMouseService mouseService)
     {
         _pluginInfo = pluginInfo;
         _processInteraction = processInteraction;
