@@ -6,5 +6,9 @@ List of WindowSill extensions contribution:
 
 
 
-&nbsp;	\*	Pomodoro Timer
+ 	\*	Pomodoro Timer
+
+&nbsp;	\*	Color Picker
+
+&nbsp;	\* 	Simple Calculator
 
