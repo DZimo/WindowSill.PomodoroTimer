@@ -1,7 +1,6 @@
 ﻿using WindowSill.PomodoroTimer.Models;
-using WindowSill.PomodoroTimer.Services;
 
-namespace WindowSill.PomodoroTimer.Services
+namespace WindowSill.PomodoroTimer.Common
 {
     public class PomodoroTypeConverter : IValueConverter
     {

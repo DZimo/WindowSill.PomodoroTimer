@@ -1,5 +1,5 @@
 ﻿using WindowSill.API;
-using Converters = WindowSill.PomodoroTimer.Services.Converters;
+using Converters = WindowSill.PomodoroTimer.Common.Converters;
 
 namespace WindowSill.PomodoroTimer.UI;
 

@@ -18,7 +18,8 @@ namespace WindowSill.PomodoroTimer.Services
 
         public Timer _timerReducer = new Timer(TimeSpan.FromSeconds(1));
 
-        private int _shortBreakTime = 5; 
+        private int _shortBreakTime = 5;
+        private int _longBreakTime = 5;
         private int _shortPomoTime = 25;
         private int _LongPomoTime = 50;
 
@@ -45,8 +46,8 @@ namespace WindowSill.PomodoroTimer.Services
 
         public void ChangeTime(TimeManager timeManager, PomodoroType type)
         {
-            ShowNotification(timeManager.IsBreakTime ? "Break Over!" : "Time for a Break!", 
-                timeManager.IsBreakTime ? "Let's get back to work." : "Take a short break.");
+            ShowNotification(timeManager.IsBreakTime ? "/WindowSill.PomodoroTimer/Misc/BreakEnd".GetLocalizedString() : "/WindowSill.PomodoroTimer/Misc/BreakTime".GetLocalizedString(), 
+                timeManager.IsBreakTime ? "/WindowSill.PomodoroTimer/Misc/BreakEndDesc".GetLocalizedString() : "/WindowSill.PomodoroTimer/Misc/BreakTimeDesc".GetLocalizedString());
 
             if (timeManager.MainTimer is null)
                 return;
@@ -76,7 +77,6 @@ namespace WindowSill.PomodoroTimer.Services
             _timerReducer.Elapsed -= OnTimerReduced;
 
             timeManager.MainTimer = null;
-
         }
 
         public int GetMinutes(TimeManager? timeManager)
@@ -110,7 +110,7 @@ namespace WindowSill.PomodoroTimer.Services
 
         public int GetTimeFromBreak(bool isBreak, PomodoroType type)
         {
-            return isBreak ? _shortBreakTime : GetTimeFromType(type);
+            return isBreak ? type is PomodoroType.Short ? _shortBreakTime : _longBreakTime : GetTimeFromType(type);
         }
 
         public Color GetColorFrombreak(bool isBreak)

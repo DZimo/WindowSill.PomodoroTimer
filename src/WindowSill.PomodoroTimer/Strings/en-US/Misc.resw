@@ -120,7 +120,16 @@
   <data name="DisplayName" xml:space="preserve">
     <value>Pomodoro Timer</value>
   </data>
-  <data name="CommandTitle" xml:space="preserve">
-    <value>New Tab</value>
+  <data name="BreakTime" xml:space="preserve">
+    <value>Time for a Break!</value>
+  </data>
+  <data name="BreakEnd" xml:space="preserve">
+    <value>Break Over!</value>
+  </data>
+  <data name="BreakTimeDesc" xml:space="preserve">
+    <value>Take a short break.</value>
+  </data>
+  <data name="BreakEndDesc" xml:space="preserve">
+    <value>Let's get back to work.</value>
   </data>
 </root>
