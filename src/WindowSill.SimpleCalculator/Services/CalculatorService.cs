@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.ComponentModel.Composition;
+using Windows.UI.ViewManagement;
 using WindowSill.SimpleCalculator.Enums;
 
 namespace WindowSill.SimpleCalculator.Services
@@ -21,10 +22,31 @@ namespace WindowSill.SimpleCalculator.Services
                     return "/";
                 case ArithmeticOperator.Multiply:
                     return "*";
-                case ArithmeticOperator.None:
+                case ArithmeticOperator.Equal:
                     return "=";
+                case ArithmeticOperator.None:
+                    return "";
                 default:
                     return "";
+            }
+        }
+
+        public float CalculateTotal(float x, float total, ArithmeticOperator inputOperator)
+        {
+            switch (inputOperator)
+            {
+                case ArithmeticOperator.Plus:
+                    return total + x;
+                case ArithmeticOperator.Minus:
+                    return total - x;
+                case ArithmeticOperator.Divide:
+                    return total / x;
+                case ArithmeticOperator.Multiply:
+                    return total * x;
+                case ArithmeticOperator.None:
+                    return total;
+                default:
+                    return total;
             }
         }
 
@@ -45,6 +67,8 @@ namespace WindowSill.SimpleCalculator.Services
                     return ArithmeticOperator.Divide;
                 case var span when span.Contains('*'):
                     return ArithmeticOperator.Multiply;
+                case var span when span.Contains('='):
+                    return ArithmeticOperator.Equal;
                 default:
                     return ArithmeticOperator.None;
             }

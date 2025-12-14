@@ -25,12 +25,11 @@ public sealed class SimpleCalculatorView : UserControl
                                       new TextBox()
                                           .Name((o) =>
                                           {
-                                              o.TextChanging += (s, e) =>
+                                              o.TextChanged += (s, e) =>
                                               {
                                                  UpdateNumberText();
                                               };
                                           })
-                                          .PlaceholderText("2 + 5")
                                           .PlaceholderForeground(Colors.Gray)
                                           .FontSize(x => x.Binding(() => vm.ColorFontSize).OneWay())
                                           .TextAlignment(TextAlignment.Center)

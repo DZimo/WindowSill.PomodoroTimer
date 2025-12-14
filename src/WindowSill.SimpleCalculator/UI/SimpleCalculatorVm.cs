@@ -20,14 +20,20 @@ public partial class SimpleCalculatorVm : ObservableObject
     [ObservableProperty]
     private ArithmeticOperator selectedArithmeticOP = ArithmeticOperator.None;
 
+    private ArithmeticOperator lastArithmeticOP = ArithmeticOperator.None;
+
     [ObservableProperty]
     private float total = 0;
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(SelectedNumber))]
     private float x = 0;
 
+    [ObservableProperty]
+    private float y = 0;
+
     public event EventHandler testEvent;
+
+    private bool numberUpdated = true;
 
     private string selectedNumber = "";
     public string SelectedNumber
@@ -79,12 +85,19 @@ public partial class SimpleCalculatorVm : ObservableObject
         char[] buffer = new char[selectedNumber.Length];
         var span = buffer.AsSpan();
         selectedNumber.AsSpan().CopyTo(span);
-        SelectedArithmeticOP = _calculatorService.GetArithmeticOperator(span);
 
-        if (SelectedArithmeticOP is ArithmeticOperator.None)
+        var op = _calculatorService.GetArithmeticOperator(span);
+
+        if (op is ArithmeticOperator.None)
             return;
 
+        SelectedArithmeticOP = op;
+
         X = _calculatorService.GetNumberX(span, _calculatorService.ArithmeticOperatorToString(SelectedArithmeticOP).ToString().AsSpan());
-        SelectedNumber = "";
+
+        Total = Total == 0 ? X : SelectedArithmeticOP is ArithmeticOperator.Equal ? _calculatorService.CalculateTotal(X, Total, lastArithmeticOP) : X;
+
+        SelectedNumber = Total > 0 ? Total.ToString() : SelectedNumber = "";
+        lastArithmeticOP = op;
     }
 }

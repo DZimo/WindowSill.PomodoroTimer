@@ -6,6 +6,7 @@
         Minus,
         Multiply,
         Divide,
+        Equal,
         None,
     }
 }
