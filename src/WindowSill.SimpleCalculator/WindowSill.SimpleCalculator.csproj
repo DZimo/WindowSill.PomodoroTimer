@@ -9,7 +9,7 @@
 
 		<PackageId>WindowSill.SimpleCalculator</PackageId>
 		<Title>Simple Calculator</Title>
-		<Version>0.1.0</Version>
+		<Version>0.2.0</Version>
 		<Description>A simple calculator to easily do arithmetic operations or convert from hex to binary / decimal.</Description>
 		<PackageProjectUrl>https://github.com/DZimo/WindowSill.Extensions</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/DZimo/WindowSill.Extensions</RepositoryUrl>
