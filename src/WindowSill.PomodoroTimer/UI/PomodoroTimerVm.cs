@@ -156,8 +156,7 @@ public partial class PomodoroTimerVm : ObservableObject
             PomodoroType.Long => PomodoroType.Short,
             _ => PomodoroType.Short,
         };
-        
-        _timeHandlerService.ResetTimer(TimeManager, PomodoroType);
-        ReserTimersVm();
+
+        StopPomodoro();
     }
 }
