@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using System;
 using System.ComponentModel.Composition;
 using WindowSill.SimpleCalculator.Enums;
 
@@ -8,6 +9,25 @@ namespace WindowSill.SimpleCalculator.Services
 
     public class CalculatorService : ICalculatorService
     {
+        public string ArithmeticOperatorToString(ArithmeticOperator inputSpan)
+        {
+            switch (inputSpan)
+            {
+                case ArithmeticOperator.Plus:
+                    return "+";
+                case ArithmeticOperator.Minus:
+                    return "-";
+                case ArithmeticOperator.Divide:
+                    return "/";
+                case ArithmeticOperator.Multiply:
+                    return "*";
+                case ArithmeticOperator.None:
+                    return "=";
+                default:
+                    return "";
+            }
+        }
+
         public bool ContainstArithmeticOperator(ReadOnlySpan<char> inputSpan)
         {
             return inputSpan.Contains('+') || inputSpan.Contains('-') || inputSpan.Contains('*') || inputSpan.Contains('/');
@@ -28,6 +48,13 @@ namespace WindowSill.SimpleCalculator.Services
                 default:
                     return ArithmeticOperator.None;
             }
+        }
+
+        public float GetNumberX(Span<char> inputSpan, ReadOnlySpan<char> op)
+        {
+            inputSpan.Replace(op.ToArray().First(), ' ');
+            float.TryParse(inputSpan.ToString(), out float result);
+            return result;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Controls;
 using WindowSill.API;
 using WindowSill.SimpleCalculator.Enums;
 using WindowSill.SimpleCalculator.Services;
@@ -19,19 +20,28 @@ public partial class SimpleCalculatorVm : ObservableObject
     [ObservableProperty]
     private ArithmeticOperator selectedArithmeticOP = ArithmeticOperator.None;
 
-    private string selectedNumber;
+    [ObservableProperty]
+    private float total = 0;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(SelectedNumber))]
+    private float x = 0;
+
+    public event EventHandler testEvent;
+
+    private string selectedNumber = "";
     public string SelectedNumber
     {
         get => selectedNumber;
         set 
-        { 
+        {
+            if (selectedNumber == value)
+                return;
+
             selectedNumber = value;
-            var span = selectedNumber.AsSpan();
-            SelectedArithmeticOP = _calculatorService.GetArithmeticOperator(span);
             OnPropertyChanged(nameof(SelectedNumber));
         }
     }
-
 
     [ObservableProperty]
     private int colorFontSize = 12;
@@ -61,5 +71,20 @@ public partial class SimpleCalculatorVm : ObservableObject
     [RelayCommand]
     public void ExtendCalculator()
     {
+        SelectedNumber = "99+";
+    }
+
+    public void NumberTextboxChanging()
+    {
+        char[] buffer = new char[selectedNumber.Length];
+        var span = buffer.AsSpan();
+        selectedNumber.AsSpan().CopyTo(span);
+        SelectedArithmeticOP = _calculatorService.GetArithmeticOperator(span);
+
+        if (SelectedArithmeticOP is ArithmeticOperator.None)
+            return;
+
+        X = _calculatorService.GetNumberX(span, _calculatorService.ArithmeticOperatorToString(SelectedArithmeticOP).ToString().AsSpan());
+        SelectedNumber = "";
     }
 }

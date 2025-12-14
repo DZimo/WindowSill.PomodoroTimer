@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using Microsoft.UI.Xaml.Controls;
+using System.Numerics;
 using WindowSill.API;
 using WindowSill.SimpleCalculator.Services;
 
@@ -22,6 +23,13 @@ public sealed class SimpleCalculatorView : UserControl
                                   .Orientation(Orientation.Horizontal)
                                   .Children(
                                       new TextBox()
+                                          .Name((o) =>
+                                          {
+                                              o.TextChanging += (s, e) =>
+                                              {
+                                                 UpdateNumberText();
+                                              };
+                                          })
                                           .PlaceholderText("2 + 5")
                                           .PlaceholderForeground(Colors.Gray)
                                           .FontSize(x => x.Binding(() => vm.ColorFontSize).OneWay())
@@ -34,7 +42,7 @@ public sealed class SimpleCalculatorView : UserControl
                                           .MaxWidth(75)
                                           .Width(75)
                                           .MaxLength(7)
-                                          .Text(x => x.Binding(() => vm.SelectedNumber).TwoWay())
+                                          .Text(x => x.Binding(() => vm.SelectedNumber).TwoWay().UpdateSourceTrigger(UpdateSourceTrigger.PropertyChanged))
                                           .Padding(0),
                                       new StackPanel()
                                           .Margin(5, 0, 5, 0)
@@ -55,5 +63,10 @@ public sealed class SimpleCalculatorView : UserControl
                                   ))
                       )
         )));
+    }
+
+    private void UpdateNumberText()
+    {
+        SimpleCalculatorVm.Instance?.NumberTextboxChanging();
     }
 }

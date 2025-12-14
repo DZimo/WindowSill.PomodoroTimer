@@ -7,5 +7,7 @@ namespace WindowSill.SimpleCalculator.Services
     {
         public bool ContainstArithmeticOperator(ReadOnlySpan<char> inputSpan);
         public ArithmeticOperator GetArithmeticOperator(ReadOnlySpan<char> inputSpan);
+        public string ArithmeticOperatorToString(ArithmeticOperator inputSpan);
+        public float GetNumberX(Span<char> inputSpan, ReadOnlySpan<char> op);
     }
 }
