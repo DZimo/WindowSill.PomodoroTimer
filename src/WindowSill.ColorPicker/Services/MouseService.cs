@@ -61,7 +61,7 @@ namespace WindowSill.ColorPicker.Services
         public string GetColorAtCursorNative()
         {
             PInvoke.SetCursor(
-                PInvoke.LoadCursor(null, "CROSS")
+                PInvoke.LoadCursor(null, "IDC_CROSS")
             );
 
             var path = _pluginInfo.GetPluginContentDirectory();

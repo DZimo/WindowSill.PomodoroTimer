@@ -1,3 +1,11 @@
+# 0.3.0
+- Add of color wheel picker
+- Integration of keyboard shortcut with CTRL
+- Updated base API
+
+# 0.2.0
+- Fixed picking bugs
+
 # 0.1.0
 - Color eyedrop tool picker
 - HEX to Color
