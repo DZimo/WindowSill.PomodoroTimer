@@ -73,7 +73,10 @@ public sealed class SimpleCalculatorView : UserControl
                                                                    new TextBlock()
                                                                        .Text(() => vm.Total, x => $"Total: {x}")
                                                                        .HorizontalAlignment(HorizontalAlignment.Center),
-                                                                   new TextBlock().Text(() => vm.X, x => $"Operand: {x}")
+                                                                   new TextBlock()
+                                                                       .Text(() => vm.X, x => $"Operan X: {x}")
+                                                                       .HorizontalAlignment(HorizontalAlignment.Center),
+                                                                   new TextBlock().Text(() => vm.SelectedNumber, x => $"Operand Y: {x}")
                                                                         .HorizontalAlignment(HorizontalAlignment.Center),
                                                                    new TextBlock()
                                                                         .Text(() => vm.SelectedArithmeticOP, x => $"Operator: {x}")
