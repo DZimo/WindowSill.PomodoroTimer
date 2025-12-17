@@ -3,8 +3,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Drawing;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.UI;
 using WindowSill.API;
 using WindowSill.ColorPicker.Services;
+using Color = Windows.UI.Color;
 
 namespace WindowSill.ColorPicker.UI;
 
@@ -24,6 +26,19 @@ public partial class ColorPickerVm : ObservableObject
     private int colorboxHeight = 18;
 
     private bool exitRequested = true;
+
+    private Color selectedColorWinUI;
+
+    public Color SelectedColorWinUI
+    {
+        get => selectedColorWinUI;
+        set
+        {
+            selectedColorWinUI = value;
+            SelectedColorHex = _mouseService.ColorToHEX(selectedColorWinUI);
+            OnPropertyChanged(nameof(SelectedColorWinUI));
+        }
+    }
 
     private string selectedColorHex = "#FFFFFF";
 
@@ -45,7 +60,7 @@ public partial class ColorPickerVm : ObservableObject
             }
             catch (Exception ex) { }
 
-            if (newColor is not Color converted)
+            if (newColor is not System.Drawing.Color converted)
                 return;
 
             SelectedColorBrush.Color = new Windows.UI.Color() { R = converted.R, G = converted.G, B = converted.B, A = 255  };
