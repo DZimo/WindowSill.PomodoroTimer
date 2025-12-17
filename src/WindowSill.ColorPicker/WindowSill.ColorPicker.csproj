@@ -27,6 +27,6 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="WindowSill.API" Version="0.7.0" />
+		<PackageReference Include="WindowSill.API" Version="0.8.3" />
 	</ItemGroup>
 </Project>

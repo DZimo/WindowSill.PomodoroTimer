@@ -15,10 +15,10 @@ public sealed class ColorPickerView : UserControl
                   .VerticalAlignment(VerticalAlignment.Top)
                   .Children(
                       new SillOrientedStackPanel()
-                          .Spacing(1)
                           .Children(
                               new StackPanel()
                                   .Orientation(Orientation.Horizontal)
+                                  .Spacing(4)
                                   .Children(
                                       new TextBox()
                                           .PlaceholderText("#FFFFFF")
