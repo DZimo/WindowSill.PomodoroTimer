@@ -23,9 +23,9 @@ public partial class ColorPickerVm : ObservableObject
     [ObservableProperty]
     private int colorboxHeight = 18;
 
-    private string selectedColorHex = "#FFFFFF";
-
     private bool exitRequested = true;
+
+    private string selectedColorHex = "#FFFFFF";
 
     public string SelectedColorHex
     {

@@ -1,6 +1,7 @@
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using Windows.UI;
 using WindowSill.API;
 using WindowSill.ColorPicker.Services;
 using WindowSill.ColorPicker.UI;
@@ -26,11 +27,9 @@ public sealed class ColorPickerSill : ISill, ISillListView
         _processInteraction = processInteraction;
         _colorPickerVm = new ColorPickerVm(pluginInfo, processInteraction, mouseService);
 
-        View = _colorPickerVm.CreateView();
-
         UpdateColorHeight();
 
-        View.IsSillOrientationOrSizeChanged += (o, p) =>
+        ViewList[0].IsSillOrientationOrSizeChanged += (o, p) =>
         {
             UpdateColorHeight();
         };
@@ -66,7 +65,7 @@ public sealed class ColorPickerSill : ISill, ISillListView
                 "/WindowSill.Extension/Misc/CommandTitle".GetLocalizedString(),
                 _colorPickerVm.CopyColorHexCommand),
 
-            new SillListViewPopupItem('\xe790', null, null),
+            new SillListViewPopupItem('\xe790', null, new RadialPickerView(_colorPickerVm)),
 
             new SillListViewPopupItem().DataContext(_colorPickerVm, (view, vm) => view.Content(
                 new Border()
@@ -118,5 +117,20 @@ public sealed class ColorPickerSill : ISill, ISillListView
         _colorPickerVm = null;
 
         return ValueTask.CompletedTask;
+    }
+
+    UIElement CreateColorSlice(Color color, double rotation)
+    {
+        return new Border()
+            .Width(20)
+            .Height(100)
+            .Background(color)
+            .CornerRadius(10)
+            .RenderTransform(
+                new RotateTransform()
+                    .Angle(rotation)
+                    .CenterX(10)
+                    .CenterY(100)
+            );
     }
 }
