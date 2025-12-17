@@ -2,6 +2,7 @@ using Microsoft.UI.Xaml.Media.Imaging;
 using System.ComponentModel.Composition;
 using WindowSill.API;
 using WindowSill.SimpleCalculator.Services;
+using WindowSill.SimpleCalculator.Settings;
 using WindowSill.SimpleCalculator.UI;
 
 namespace WindowSill.SimpleCalculator;
@@ -14,15 +15,17 @@ public sealed class SimpleCalculatorSill : ISill, ISillSingleView
     private SimpleCalculatorVm _simpleCalculatorVm;
     private IPluginInfo _pluginInfo;
     private IProcessInteractionService _processInteraction;
+    private ISettingsProvider _settingsProvider;
 
     public SillView? View { get; private set; }
 
     [ImportingConstructor]
-    public SimpleCalculatorSill(IPluginInfo pluginInfo, IProcessInteractionService processInteraction, ICalculatorService calculatorService)
+    public SimpleCalculatorSill(IPluginInfo pluginInfo, IProcessInteractionService processInteraction, ICalculatorService calculatorService, ISettingsProvider settingsProvider)
     {
         _pluginInfo = pluginInfo;
         _processInteraction = processInteraction;
-        _simpleCalculatorVm = new SimpleCalculatorVm(pluginInfo, processInteraction, calculatorService);
+        _settingsProvider = settingsProvider;
+        _simpleCalculatorVm = new SimpleCalculatorVm(settingsProvider, processInteraction, calculatorService);
 
         View = _simpleCalculatorVm.CreateView();
         UpdateColorHeight();
@@ -39,7 +42,7 @@ public sealed class SimpleCalculatorSill : ISill, ISillSingleView
         _simpleCalculatorVm?.ColorboxHeight = View?.SillOrientationAndSize == SillOrientationAndSize.HorizontalSmall ? 16 : View?.SillOrientationAndSize == SillOrientationAndSize.HorizontalMedium ? 18 : 18;
     }
 
-    public string DisplayName => "/WindowSill.ColorPicker/Misc/DisplayName".GetLocalizedString();
+    public string DisplayName => "/WindowSill.SimpleCalculator/Misc/DisplayName".GetLocalizedString();
 
     public IconElement CreateIcon()
          => new ImageIcon
@@ -49,7 +52,12 @@ public sealed class SimpleCalculatorSill : ISill, ISillSingleView
 
     public SillView? PlaceholderView => null;
 
-    public SillSettingsView[]? SettingsViews => null;
+    public SillSettingsView[]? SettingsViews =>
+        [
+        new SillSettingsView(
+            DisplayName,
+            new(() => new SettingsView(_settingsProvider)))
+        ];
 
     private async Task OnCommandButtonClickAsync()
     {
