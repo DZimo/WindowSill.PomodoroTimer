@@ -6,6 +6,9 @@ namespace WindowSill.PomodoroTimer.Settings
 {
     internal class SettingsView : UserControl
     {
+        private string elapsedText = "/WindowSill.PomodoroTimer/Misc/ElapsedText".GetLocalizedString();
+        private string remainingText = "/WindowSill.PomodoroTimer/Misc/RemainingText".GetLocalizedString();
+
         public SettingsView(ISettingsProvider settingsProvider)
         {
             this.DataContext(
@@ -28,14 +31,27 @@ namespace WindowSill.PomodoroTimer.Settings
                                         .Glyph("\uECC5"))
                                 .Content(
                               new ComboBox()
-                                  .ItemsSource(Enum.GetValues(typeof(TimeDisplayMode)))
+                                  .ItemsSource(new[] { remainingText, elapsedText})
                                   .SelectedItem(
                                         x => x.Binding(() => viewModel.TimeDisplayMode)
                                               .TwoWay()
-                                              .UpdateSourceTrigger(UpdateSourceTrigger.PropertyChanged)
+                                              .UpdateSourceTrigger(UpdateSourceTrigger.Default)
+                                              .Convert(o => o switch
+                                              {
+                                                  TimeDisplayMode.TimeLeft => remainingText,
+                                                  TimeDisplayMode.TimeSpent => elapsedText,
+                                                  _ => ""
+                                              })
+                                            .ConvertBack(o =>
+                                            {
+                                                if (o is not string res)
+                                                    return TimeDisplayMode.TimeLeft;
+
+                                                return res.Equals(remainingText) ? TimeDisplayMode.TimeLeft : TimeDisplayMode.TimeSpent;
+                                            })
+                                              )
+                                   )
                                 )
-                        )
-                        )
                 )
             );
         }

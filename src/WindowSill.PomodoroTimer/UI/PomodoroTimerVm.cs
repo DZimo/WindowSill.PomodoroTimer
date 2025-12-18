@@ -5,12 +5,14 @@ using Windows.UI;
 using WindowSill.API;
 using WindowSill.PomodoroTimer.Models;
 using WindowSill.PomodoroTimer.Services;
+using WindowSill.PomodoroTimer.Settings;
 
 namespace WindowSill.PomodoroTimer.UI;
 
 public partial class PomodoroTimerVm : ObservableObject
 {
     private readonly IPluginInfo _pluginInfo;
+    private readonly ISettingsProvider _settingsProvider;
     public readonly ITimeHandlerService _timeHandlerService;
 
     [ObservableProperty]
@@ -19,8 +21,19 @@ public partial class PomodoroTimerVm : ObservableObject
     [ObservableProperty]
     private PomodoroType pomodoroType = PomodoroType.Short;
 
-    [ObservableProperty]
-    private TimeDisplayMode timeDisplayMode = TimeDisplayMode.TimeSpent;
+    private TimeDisplayMode timeDisplayMode;
+
+    public TimeDisplayMode TimeDisplayMode
+    {
+        get => _settingsProvider.GetSetting(Settings.Settings.DisplayMode);
+        set
+        {
+            timeDisplayMode = value;
+            _settingsProvider.SetSetting<TimeDisplayMode>(Settings.Settings.DisplayMode, value);
+            OnPropertyChanged(nameof(TimeDisplayMode));
+            OnPropertyChanged(nameof(SettingsVm.TimeDisplayMode));
+        }
+    }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PomodoroStopped))]
@@ -91,7 +104,9 @@ public partial class PomodoroTimerVm : ObservableObject
 
         _pluginInfo = pluginInfo;
         _timeHandlerService = timeHandlerService;
-        timeDisplayMode = settingsProvider.GetSetting<TimeDisplayMode>(Settings.Settings.DisplayMode);
+        _settingsProvider = settingsProvider;
+
+        TimeDisplayMode = settingsProvider.GetSetting<TimeDisplayMode>(Settings.Settings.DisplayMode);
         MinutesSpent = PomodoroDuration.ToString();
         Instance = this;
     }

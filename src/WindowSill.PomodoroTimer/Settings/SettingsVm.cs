@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using WindowSill.API;
 using WindowSill.PomodoroTimer.Models;
+using WindowSill.PomodoroTimer.UI;
 
 namespace WindowSill.PomodoroTimer.Settings
 {
@@ -19,7 +20,12 @@ namespace WindowSill.PomodoroTimer.Settings
         public TimeDisplayMode TimeDisplayMode
         {
             get => _settingsProvider.GetSetting(Settings.DisplayMode);
-            set => _settingsProvider.SetSetting(Settings.DisplayMode, value);
+            set
+            {
+                _settingsProvider.SetSetting(Settings.DisplayMode, value);
+                OnPropertyChanged(nameof(PomodoroTimerVm.TimeDisplayMode));
+                OnPropertyChanged(nameof(SettingsVm.TimeDisplayMode));
+            }
         }
     }
 }
