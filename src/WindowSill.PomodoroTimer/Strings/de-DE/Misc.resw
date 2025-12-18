@@ -136,9 +136,15 @@
     <value>Allgemein</value>
   </data>
   <data name="DisplayMode" xml:space="preserve">
-    <value>Time Display Mode</value>
+    <value>Zeitanzeige Modus</value>
   </data>
   <data name="DisplayModeDesc" xml:space="preserve">
-    <value>Choose between showing the time elapsed to 25/50 or the time remaining from the 25/50 pomodoro</value>
+    <value>Wählen Sie zwischen der Anzeige der Verlaufszeit auf 25/50 oder der verbleibenden Zeit aus dem 25/50 Pomodoro</value>
+  </data>
+  <data name="ElapsedText" xml:space="preserve">
+    <value>Elapsed Time</value>
+  </data>
+  <data name="RemainingText" xml:space="preserve">
+    <value>Remaining Time</value>
   </data>
 </root>
