@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.Composition;
 using System.Drawing;
-using Windows.UI;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Graphics.Gdi;
@@ -60,14 +59,7 @@ namespace WindowSill.ColorPicker.Services
 
         public string GetColorAtCursorNative()
         {
-            PInvoke.SetCursor(
-                PInvoke.LoadCursor(null, "IDC_CROSS")
-            );
-
-            var path = _pluginInfo.GetPluginContentDirectory();
-            using var hCursor = PInvoke.LoadCursorFromFile(path + "/Assets/colorpicker_cursor.cur");
-
-            PInvoke.SetCursor(hCursor);
+            ChangeCursor();
 
             var colorhex = "";
 
@@ -99,6 +91,22 @@ namespace WindowSill.ColorPicker.Services
         public void Dispoese()
         {
             throw new NotImplementedException();
+        }
+
+        private void ChangeCursor()
+        {
+            PInvoke.SetCursor(
+              PInvoke.LoadCursor(null, "IDC_CROSS")
+          );
+
+            var cursorPath = System.IO.Path.Combine(
+                _pluginInfo.GetPluginContentDirectory(),
+                "Assets",
+                "colorpicker_cursor.cur"
+            );
+
+            var hCursor = PInvoke.LoadCursorFromFile(cursorPath);
+            PInvoke.SetCursor(hCursor);
         }
     }
 }

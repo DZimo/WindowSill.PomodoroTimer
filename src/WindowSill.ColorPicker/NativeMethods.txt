@@ -6,4 +6,5 @@ SetWindowsHookEx
 CallNextHookEx
 SetCursor
 LoadCursor
+LoadCursorFromFileW
 LoadCursorFromFile
