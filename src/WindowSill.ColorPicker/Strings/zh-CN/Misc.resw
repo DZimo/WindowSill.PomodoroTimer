@@ -124,9 +124,9 @@
     <value>New Tab</value>
   </data>
   <data name="GrabColor" xml:space="preserve">
-    <value>Grab color from screen</value>
+    <value>从屏幕上抓取颜色</value>
   </data>
   <data name="CopyColor" xml:space="preserve">
-    <value>Copy the selected color in HEX</value>
+    <value>复制选中的十六进制颜色</value>
   </data>
 </root>
