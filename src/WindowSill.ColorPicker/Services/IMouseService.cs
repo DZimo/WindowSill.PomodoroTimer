@@ -8,7 +8,7 @@ namespace WindowSill.ColorPicker.Services
 
         public string GetColorAtCursorNative();
 
-        public void ShowColorNative();
+        public string ColorToHEX(Color rgb);
 
         public void Dispoese();
     }

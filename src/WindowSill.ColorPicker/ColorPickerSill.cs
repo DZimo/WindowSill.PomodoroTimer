@@ -1,16 +1,18 @@
-using CommunityToolkit.Diagnostics;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml.Media.Imaging;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using WindowSill.API;
 using WindowSill.ColorPicker.Services;
 using WindowSill.ColorPicker.UI;
+using Picker = Microsoft.UI.Xaml.Controls;
 
 namespace WindowSill.ColorPicker;
 
 [Export(typeof(ISill))]
 [Name("WindowSill.ColorPicker")]
 [Priority(Priority.Lowest)]
+[HideIconInSillListView]
 public sealed class ColorPickerSill : ISill, ISillListView
 {
     private ColorPickerVm _colorPickerVm;
@@ -26,13 +28,9 @@ public sealed class ColorPickerSill : ISill, ISillListView
         _processInteraction = processInteraction;
         _colorPickerVm = new ColorPickerVm(pluginInfo, processInteraction, mouseService);
 
-        View = _colorPickerVm.CreateView();
-
-        //ViewList.Add(View);
-
         UpdateColorHeight();
 
-        View.IsSillOrientationOrSizeChanged += (o, p) =>
+        ViewList[0].IsSillOrientationOrSizeChanged += (o, p) =>
         {
             UpdateColorHeight();
         };
@@ -60,28 +58,74 @@ public sealed class ColorPickerSill : ISill, ISillListView
         => [
             new SillListViewButtonItem(
                 '\xEf3c',
-                "/WindowSill.Extension/Misc/CommandTitle".GetLocalizedString(),
-                _colorPickerVm.GetColorCommand),
+                new TextBlock().Margin(5).Text("/WindowSill.ColorPicker/Misc/GrabColor".GetLocalizedString()),
+                _colorPickerVm.GetColor),
 
-            new SillListViewPopupItem("test", null, null),
+            new SillListViewButtonItem(
+                '\xE8c8',
+                new TextBlock().Margin(5).Text("/WindowSill.ColorPicker/Misc/CopyColor".GetLocalizedString()),
+                _colorPickerVm.CopyColorHex),
 
-            new SillListViewButtonItem().DataContext(
-                this,(view, vm)  => view.Content(
-                        new Grid()
-                        .Background(() => _colorPickerVm.SelectedColorBrush)
-                        .Children(
+            new SillListViewPopupItem('\xe790', null, new SillPopupContent().ToolTipService(toolTip:  "/WindowSill.ColorPicker/Misc/CommandTitle".GetLocalizedString()).DataContext(_colorPickerVm).Content( new SillOrientedStackPanel()
+                           .Children(
+                                new StackPanel()
+                                .Spacing(4)
+                                .VerticalAlignment(VerticalAlignment.Center)
+                                .HorizontalAlignment(HorizontalAlignment.Center)
+                                .Margin(5)
+                                .Children(
+                                    new TextBlock()
+                                        .VerticalAlignment(VerticalAlignment.Center)
+                                        .HorizontalAlignment(HorizontalAlignment.Center)
+                                        .FontWeight(FontWeights.Bold)
+                                        .Text("Color Picker"),
+                                    new Picker.ColorPicker()
+                                        .HorizontalContentAlignment(HorizontalAlignment.Center)
+                                        .VerticalAlignment(VerticalAlignment.Center)
+                                        .HorizontalAlignment(HorizontalAlignment.Center)
+                                        .Margin(5)
+                                        .IsColorPreviewVisible(true)
+                                        .IsColorChannelTextInputVisible(false)
+                                        .IsHexInputVisible(false)
+                                        .ColorSpectrumShape(ColorSpectrumShape.Ring)
+                                        .Color(x => x.Binding(() => _colorPickerVm.SelectedColorWinUI).TwoWay())
+                                    )))),
+
+            new SillListViewPopupItem()
+                    .Background(Colors.Transparent)
+                    .DataContext(_colorPickerVm, (view, vm) => view.Content(
+                new Border()
+                    .Child(
                         new SillOrientedStackPanel()
-                            .Spacing(4)
                             .Children(
-                                new TextBlock().Text(_colorPickerVm.SelectedColorHex))),
-                                null,
-                                OnCommandButtonClickAsync)));))
+                                  new StackPanel()
+                                      .Orientation(Orientation.Horizontal)
+                                      .Spacing(4)
+                                      .Children(
+                                        new StackPanel()
+                                              .Width(7)
+                                              .Margin(5, 0, 0, 0)
+                                              .Background(x => x.Binding(() => vm.SelectedColorBrush).OneWay()),
+                                        new TextBox()
+                                              .PlaceholderText("#FFFFFF")
+                                              .PlaceholderForeground(Colors.Gray)
+                                              .FontSize(x => x.Binding(() => _colorPickerVm.ColorFontSize).OneWay())
+                                              .TextAlignment(TextAlignment.Center)
+                                              .AcceptsReturn(false)
+                                              .FontStretch(Windows.UI.Text.FontStretch.Expanded)
+                                              .VerticalContentAlignment(VerticalAlignment.Center)
+                                              .VerticalAlignment(VerticalAlignment.Center)
+                                              .TextWrapping(TextWrapping.Wrap)
+                                              .MinHeight(x => x.Binding(() => _colorPickerVm.ColorboxHeight).OneWay())
+                                              .MaxWidth(75)
+                                              .Width(75)
+                                              .MaxLength(7)
+                                              .Text(x => x.Binding(() => _colorPickerVm.SelectedColorHex).TwoWay())
+                                              .Padding(0)
+                                              .Margin(0)
+                                              .BorderBrush(x => x.Binding(() => _colorPickerVm.SelectedColorBrush).OneWay()))))
+             )),
         ];
-
-    private async Task OnCommandButtonClickAsync()
-    {
-        throw new NotImplementedException();
-    }
 
     public ValueTask OnActivatedAsync()
     {

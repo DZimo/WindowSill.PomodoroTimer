@@ -1,8 +1,7 @@
 ﻿using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.VisualBasic;
-using Windows.System;
+using Windows.ApplicationModel.DataTransfer;
 using WindowSill.API;
 using WindowSill.SimpleCalculator.Enums;
 using WindowSill.SimpleCalculator.Services;
@@ -78,11 +77,6 @@ public partial class SimpleCalculatorVm : ObservableObject
         AutoCopyPaste = _settingsProvider.GetSetting<bool>(Settings.Settings.AutoCopyPaste);
     }
 
-    private void OnEnterPressed(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
-    {
-        throw new NotImplementedException();
-    }
-
     public SillView CreateView()
     {
         return new SillView { Content = new SimpleCalculatorView(this) };
@@ -113,6 +107,19 @@ public partial class SimpleCalculatorVm : ObservableObject
 
         lastArithmeticOP = op;
         SelectedNumber = Total > 0 && lastArithmeticOP is ArithmeticOperator.Equal ? Total.ToString() : SelectedNumber = "";
+    }
+
+    public async Task NumberTextboxFocused()
+    {
+        if (!AutoCopyPaste || !SelectedNumber.Equals(string.Empty))
+            return;
+
+        var copy = await Clipboard.GetContent().GetTextAsync();
+
+        if (copy is null || !double.TryParse(copy, out double parsed))
+            return;
+
+        SelectedNumber = copy;
     }
 
     [RelayCommand]
