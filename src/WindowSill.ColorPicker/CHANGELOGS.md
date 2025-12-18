@@ -1,3 +1,6 @@
+# 0.3.2
+- Add of tooltips with small bug fixes
+
 # 0.3.1
 - Fixed ctrl bug and color picker crash bug
 
