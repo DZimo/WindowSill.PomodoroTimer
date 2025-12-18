@@ -66,25 +66,33 @@ public partial class PomodoroTimerVm : ObservableObject
         get => $"{_timeHandlerService.GetSeconds(TimeManager):D2}";
     }
 
-    public string MinutesSpent;
+    public string MinutesSpent
+    {
+        get => field;
+        set => field = value;
+    }
 
-    public string SecondsSpent;
+    public string SecondsSpent = "00";
 
     public string TimeLeft
     {
         get
         {
-          return TimeDisplayMode is TimeDisplayMode.TimeSpent ?  $"{MinutesLeft}:{SecondsLeft}" : $"{MinutesSpent:D2}:{SecondsSpent:D2}";
+          return TimeDisplayMode is TimeDisplayMode.TimeSpent ?  $"{MinutesLeft}:{SecondsLeft}" : MinutesSpent is not "" ?  $"{MinutesSpent:D2}:{SecondsSpent:D2}" : $"{PomodoroDuration:D2}:{00:D2}";
         }
     }
 
-    public PomodoroTimerVm(ITimeHandlerService timeHandlerService, IPluginInfo? pluginInfo)
+    private int PomodoroDuration => _timeHandlerService.GetTimeFromType(PomodoroType);
+
+    public PomodoroTimerVm(ITimeHandlerService timeHandlerService, IPluginInfo? pluginInfo, ISettingsProvider settingsProvider)
     {
         Guard.IsNotNull(pluginInfo, nameof(pluginInfo));
         Guard.IsNotNull(timeHandlerService, nameof(timeHandlerService));
 
         _pluginInfo = pluginInfo;
         _timeHandlerService = timeHandlerService;
+        timeDisplayMode = settingsProvider.GetSetting<TimeDisplayMode>(Settings.Settings.DisplayMode);
+        MinutesSpent = PomodoroDuration.ToString();
         Instance = this;
     }
 

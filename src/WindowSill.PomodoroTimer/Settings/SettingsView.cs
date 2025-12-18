@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.WinUI.Controls;
 using WindowSill.API;
+using WindowSill.PomodoroTimer.Models;
 
 namespace WindowSill.PomodoroTimer.Settings
 {
@@ -17,20 +18,23 @@ namespace WindowSill.PomodoroTimer.Settings
                             new TextBlock()
                                 .Style(x => x.ThemeResource("BodyStrongTextBlockStyle"))
                                 .Margin(0, 0, 0, 8)
-                                .Text("/WindowSill.SimpleCalculator/Misc/General".GetLocalizedString()),
+                                .Text("/WindowSill.PomodoroTimer/Misc/General".GetLocalizedString()),
                             new SettingsCard()
-                                .Header("/WindowSill.SimpleCalculator/Misc/PopupSettings".GetLocalizedString())
+                                .Header("/WindowSill.PomodoroTimer/Misc/DisplayMode".GetLocalizedString())
+                                .Description("/WindowSill.PomodoroTimer/Misc/DisplayModeDesc".GetLocalizedString())
+                                .Tag("test")
                                 .HeaderIcon(
                                     new FontIcon()
-                                        .Glyph("\uE8C0"))
+                                        .Glyph("\uECC5"))
                                 .Content(
-                                    new ToggleSwitch()
-                                        .IsOn(
-                                            x => x.Binding(() => viewModel.TimeDisplayMode)
-                                                  .TwoWay()
-                                                  .UpdateSourceTrigger(UpdateSourceTrigger.PropertyChanged)
-                                        )
+                              new ComboBox()
+                                  .ItemsSource(Enum.GetValues(typeof(TimeDisplayMode)))
+                                  .SelectedItem(
+                                        x => x.Binding(() => viewModel.TimeDisplayMode)
+                                              .TwoWay()
+                                              .UpdateSourceTrigger(UpdateSourceTrigger.PropertyChanged)
                                 )
+                        )
                         )
                 )
             );

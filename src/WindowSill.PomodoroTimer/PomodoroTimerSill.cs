@@ -27,7 +27,7 @@ public sealed class PomodoroTimerSill : ISill, ISillSingleView
         _pluginInfo = pluginInfo;
         _settingsProvider = settingsProvider;
 
-        pomodoroTimerVm = new PomodoroTimerVm(timeHandlerService, pluginInfo);
+        pomodoroTimerVm = new PomodoroTimerVm(timeHandlerService, pluginInfo, settingsProvider);
 
         View = pomodoroTimerVm.CreateView();
         UpdateColorHeight();

@@ -132,4 +132,13 @@
   <data name="BreakEndDesc" xml:space="preserve">
     <value>Let's get back to work.</value>
   </data>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="DisplayMode" xml:space="preserve">
+    <value>Time Display Mode</value>
+  </data>
+  <data name="DisplayModeDesc" xml:space="preserve">
+    <value>Choose between showing the time elapsed to 25/50 or the time remaining from the 25/50 pomodoro</value>
+  </data>
 </root>
