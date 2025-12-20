@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	  <TargetFramework>net6.0</TargetFramework>
+	  <TargetFramework>net9.0-windows10.0.22621</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\defaultExchangeRates.json" />
@@ -12,7 +12,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Common" Version="*"/>
     <PackageReference Include="CommunityToolkit.Diagnostics" Version="*" />
-	<PackageReference Include="System.Composition" Version="6.0.0" />
+	<PackageReference Include="System.Composition" Version="*" />
   </ItemGroup>
 
   <ItemGroup>

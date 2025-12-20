@@ -8,6 +8,7 @@ using System.Linq;
 namespace NotepadBasedCalculator.Core
 {
     [Export(typeof(IParserAndInterpretersRepository))]
+    [Shared]
     internal sealed class ParserRepository : IParserAndInterpretersRepository
     {
         private readonly IEnumerable<Lazy<IDataParser, CultureCodeMetadata>> _dataParsers;
