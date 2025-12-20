@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Recognizers.Text;
 using NotepadBasedCalculator.Core;
+using NotepadBasedCalculator.Core.Mef;
 using Windows.ApplicationModel.DataTransfer;
 using WindowSill.API;
 using WindowSill.SimpleCalculator.Enums;
@@ -65,7 +67,7 @@ public partial class SimpleCalculatorVm : ObservableObject
 
     public TextDocument textDocumentAPI = new TextDocument();
 
-    //private ParserAndInterpreter parserAndInterpreter;
+    private ParserAndInterpreter parserAndInterpreter;
     public SimpleCalculatorVm(ISettingsProvider settingsProvider, IProcessInteractionService processInteraction, ICalculatorService calculatorService)
     {
         Guard.IsNotNull(settingsProvider, nameof(settingsProvider));
@@ -81,10 +83,10 @@ public partial class SimpleCalculatorVm : ObservableObject
         AutoPopupOpen = _settingsProvider.GetSetting<bool>(Settings.Settings.AutoPopup);
         AutoCopyPaste = _settingsProvider.GetSetting<bool>(Settings.Settings.AutoCopyPaste);
 
-        //var mefComposer = new MefComposer(new[] { typeof(SimpleCalculatorVm).Assembly });
+        var mefComposer = new MefComposer(new[] { typeof(SimpleCalculatorSill).Assembly });
 
-        //var parserAndInterpreterFactory = mefComposer.ExportProvider.GetExport<ParserAndInterpreterFactory>();
-        //var parserAndInterpreter = parserAndInterpreterFactory.CreateInstance(Culture.English, textDocumentAPI);
+        var parserAndInterpreterFactory = mefComposer.ExportProvider.GetExport<ParserAndInterpreterFactory>();
+        parserAndInterpreter = parserAndInterpreterFactory.CreateInstance(Culture.English, textDocumentAPI);
     }
 
     public SillView CreateView()
@@ -100,6 +102,9 @@ public partial class SimpleCalculatorVm : ObservableObject
 
     public async Task NumberTextboxChanging()
     {
+        textDocumentAPI.Text = SelectedNumber;
+        var res = await parserAndInterpreter.WaitAsync();
+
         char[] buffer = new char[selectedNumber.Length];
         var span = buffer.AsSpan();
         selectedNumber.AsSpan().CopyTo(span);
@@ -117,9 +122,6 @@ public partial class SimpleCalculatorVm : ObservableObject
 
         lastArithmeticOP = op;
         SelectedNumber = Total > 0 && lastArithmeticOP is ArithmeticOperator.Equal ? Total.ToString() : SelectedNumber = "";
-
-        //textDocumentAPI.Text = SelectedNumber;
-        //var res = await parserAndInterpreter.WaitAsync();
     }
 
     public async Task NumberTextboxFocused()
