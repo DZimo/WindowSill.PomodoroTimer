@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using NotepadBasedCalculator.Core;
 using Windows.ApplicationModel.DataTransfer;
 using WindowSill.API;
 using WindowSill.SimpleCalculator.Enums;
@@ -36,7 +37,7 @@ public partial class SimpleCalculatorVm : ObservableObject
     public string SelectedNumber
     {
         get => selectedNumber;
-        set 
+        set
         {
             if (selectedNumber == value)
                 return;
@@ -62,6 +63,9 @@ public partial class SimpleCalculatorVm : ObservableObject
 
     public static SimpleCalculatorVm? Instance;
 
+    public TextDocument textDocumentAPI = new TextDocument();
+
+    //private ParserAndInterpreter parserAndInterpreter;
     public SimpleCalculatorVm(ISettingsProvider settingsProvider, IProcessInteractionService processInteraction, ICalculatorService calculatorService)
     {
         Guard.IsNotNull(settingsProvider, nameof(settingsProvider));
@@ -73,8 +77,14 @@ public partial class SimpleCalculatorVm : ObservableObject
         _calculatorService = calculatorService;
         Instance = this;
 
+
         AutoPopupOpen = _settingsProvider.GetSetting<bool>(Settings.Settings.AutoPopup);
         AutoCopyPaste = _settingsProvider.GetSetting<bool>(Settings.Settings.AutoCopyPaste);
+
+        //var mefComposer = new MefComposer(new[] { typeof(SimpleCalculatorVm).Assembly });
+
+        //var parserAndInterpreterFactory = mefComposer.ExportProvider.GetExport<ParserAndInterpreterFactory>();
+        //var parserAndInterpreter = parserAndInterpreterFactory.CreateInstance(Culture.English, textDocumentAPI);
     }
 
     public SillView CreateView()
@@ -88,7 +98,7 @@ public partial class SimpleCalculatorVm : ObservableObject
         test.StartBringIntoView();
     }
 
-    public void NumberTextboxChanging()
+    public async Task NumberTextboxChanging()
     {
         char[] buffer = new char[selectedNumber.Length];
         var span = buffer.AsSpan();
@@ -107,6 +117,9 @@ public partial class SimpleCalculatorVm : ObservableObject
 
         lastArithmeticOP = op;
         SelectedNumber = Total > 0 && lastArithmeticOP is ArithmeticOperator.Equal ? Total.ToString() : SelectedNumber = "";
+
+        //textDocumentAPI.Text = SelectedNumber;
+        //var res = await parserAndInterpreter.WaitAsync();
     }
 
     public async Task NumberTextboxFocused()
@@ -123,6 +136,6 @@ public partial class SimpleCalculatorVm : ObservableObject
     }
 
     [RelayCommand]
-    private void AppendNumberWithOP(char op) => 
+    private void AppendNumberWithOP(char op) =>
         SelectedNumber += op;
 }

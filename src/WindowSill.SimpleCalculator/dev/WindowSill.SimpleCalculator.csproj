@@ -23,6 +23,9 @@
 		<None Include="CHANGELOGS.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
+		<PackageReference Include="Microsoft.Recognizers.Text" Version="1.8.13" />
 		<PackageReference Include="WindowSill.API" Version="0.7.0" />
+		<ProjectReference Include="..\lib\NotepadBasedCalculator.Api\NotepadBasedCalculator.Api.csproj" />
+		<ProjectReference Include="..\lib\NotepadBasedCalculator.Core\NotepadBasedCalculator.Core.csproj" />
 	</ItemGroup>
 </Project>
